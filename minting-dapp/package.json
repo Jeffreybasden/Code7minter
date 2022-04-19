@@ -37,5 +37,8 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
+    },
+    "dependencies": {
+        "@types/react-helmet": "^6.1.5"
     }
 }
