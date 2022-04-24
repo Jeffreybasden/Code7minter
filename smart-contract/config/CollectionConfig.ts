@@ -21,10 +21,10 @@ const CollectionConfig: CollectionConfigInterface = {
     maxMintAmountPerTx: 2,
   },
   publicSale: {
-    price: 77,
+    price: 1,
     maxMintAmountPerTx: 10,
   },
-  contractAddress:'0xd8c1aF0A1E464a8C30D1a4311096eb6D085e2f8a',
+  contractAddress:'0x5de092E5f5070056D3283FcF6bC02C7D9d7754fa',
   marketplaceIdentifier: '19263&network=250',
   marketplaceConfig: openSea,
   whitelistAddresses: whitelistAddresses,

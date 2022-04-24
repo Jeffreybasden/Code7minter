@@ -6,8 +6,11 @@ import 'erc721a/contracts/ERC721A.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/utils/cryptography/MerkleProof.sol';
 import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
+import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
+import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 
-contract Code7NFTs is ERC721A, Ownable, ReentrancyGuard {
+
+contract Section is ERC721A, Ownable, ReentrancyGuard {
 
   using Strings for uint256;
 
@@ -22,9 +25,13 @@ contract Code7NFTs is ERC721A, Ownable, ReentrancyGuard {
   uint256 public maxSupply;
   uint256 public maxMintAmountPerTx;
 
-  bool public paused = true;
+  bool public paused = false;
   bool public whitelistMintEnabled = false;
   bool public revealed = false;
+  IERC20  usdc;
+  address usdcAddress;
+
+
 
   constructor(
     string memory _tokenName,
@@ -32,14 +39,16 @@ contract Code7NFTs is ERC721A, Ownable, ReentrancyGuard {
     uint256 _cost,
     uint256 _maxSupply,
     uint256 _maxMintAmountPerTx,
-    string memory _hiddenMetadataUri
+    string memory _hiddenMetadataUri,
+    address _usdcAddress
   ) ERC721A(_tokenName, _tokenSymbol) {
     setCost(_cost);
     maxSupply = _maxSupply;
     setMaxMintAmountPerTx(_maxMintAmountPerTx);
     setHiddenMetadataUri(_hiddenMetadataUri);
+    usdcAddress = _usdcAddress;
+    usdc = IERC20(usdcAddress);
   }
-
   modifier mintCompliance(uint256 _mintAmount) {
     require(_mintAmount > 0 && _mintAmount <= maxMintAmountPerTx, 'Invalid mint amount!');
     require(totalSupply() + _mintAmount <= maxSupply, 'Max supply exceeded!');
@@ -48,6 +57,7 @@ contract Code7NFTs is ERC721A, Ownable, ReentrancyGuard {
 
   modifier mintPriceCompliance(uint256 _mintAmount) {
     require(msg.value >= cost * _mintAmount, 'Insufficient funds!');
+    
     _;
   }
 
@@ -64,7 +74,9 @@ contract Code7NFTs is ERC721A, Ownable, ReentrancyGuard {
 
   function mint(uint256 _mintAmount) public payable mintCompliance(_mintAmount) mintPriceCompliance(_mintAmount) {
     require(!paused, 'The contract is paused!');
-
+    
+    bool pay = usdc.transferFrom(msg.sender,address(this),cost);
+    require(pay);
     _safeMint(_msgSender(), _mintAmount);
   }
   
