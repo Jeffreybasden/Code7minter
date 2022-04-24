@@ -7,8 +7,8 @@ const CollectionConfig: CollectionConfigInterface = {
   testnet: ethereumTestnet,
   mainnet: ethereumMainnet,
   
-  contractName: 'Code7NFTs',
-  tokenName: 'Code7NFTs',
+  contractName: 'Section',
+  tokenName: 'Section',
   tokenSymbol: 'CD7',
   hiddenMetadataUri:'ipfs://__CID__/hidden.json',
   maxSupply: 777,
